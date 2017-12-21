@@ -17,18 +17,14 @@ class SentMemeTableViewController: UIViewController, UITableViewDelegate, UITabl
     
     @IBOutlet weak var tableView: UITableView!
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.memes = appDelegate.memes
         self.tableView.reloadData()
         self.tableView.delegate = self
         self.tableView.dataSource = self
     }
     
-    override func viewDidLoad() {
-        let rightBarButton = UIBarButtonItem.init(barButtonSystemItem: .add, target: self, action: #selector(pushEditorView))
-        self.navigationBar.setRightBarButton(rightBarButton, animated: true)
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.memes.count
@@ -43,10 +39,12 @@ class SentMemeTableViewController: UIViewController, UITableViewDelegate, UITabl
         
         return cell
     }
-
-    @objc func pushEditorView() {
-        self.navigationController?.pushViewController((storyboard?.instantiateViewController(withIdentifier: "MemeEditorViewController"))!, animated: true)
+    
+    @IBAction func addMeme(_ sender: Any) {
+        let editorView = self.storyboard?.instantiateViewController(withIdentifier: "MemeEditorViewController") as! MemeEditorViewController
+        present(editorView, animated: true, completion: nil)
     }
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailView = storyboard?.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController

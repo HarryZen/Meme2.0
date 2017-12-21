@@ -14,24 +14,18 @@ class SentMemeCollectionViewController: UIViewController,UICollectionViewDelegat
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     @IBOutlet weak var collectionView: UICollectionView!
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        self.memes = self.appDelegate.memes
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(pushEditView))
-        
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        memes = appDelegate.memes
+        self.collectionView.reloadData()
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
     }
     
-    @objc func pushEditView(){
-        let editView = self.storyboard?.instantiateViewController(withIdentifier: "MemeEditorViewController") as! MemeEditorViewController
-        self.navigationController?.pushViewController(editView, animated: true)
+    @IBAction func addMeme(_ sender:Any) {
+        let editorView = storyboard?.instantiateViewController(withIdentifier: "MemeEditorViewController") as! MemeEditorViewController
+        present(editorView, animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -43,7 +37,6 @@ class SentMemeCollectionViewController: UIViewController,UICollectionViewDelegat
         let meme = self.memes[(indexPath as NSIndexPath).row]
         
         cell.imageView.image = meme.memedImage
-        cell.textLabel.text = "\(meme.topText)...\(meme.buttomText)"
         
         return cell
     }

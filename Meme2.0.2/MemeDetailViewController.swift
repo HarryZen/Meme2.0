@@ -13,21 +13,19 @@ class MemeDetailViewController: UIViewController, UINavigationControllerDelegate
     var meme: Meme!
     @IBOutlet weak var imageView: UIImageView!
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.imageView.image = meme.memedImage
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.edit, target: self, action: #selector(pushEditView))
     }
     
-    @objc func pushEditView() {
-        let editorView = storyboard?.instantiateViewController(withIdentifier: "MemeEditorViewController") as! MemeEditorViewController
-        
-        editorView.topTextField.text = self.meme.topText
-        editorView.buttomTextField.text = self.meme.buttomText
-        editorView.imageView.image = self.meme.originalImage
-        
-        self.navigationController?.pushViewController(editorView, animated: true)
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        let controller = segue.destination as! MemeEditorViewController
+//        
+//        controller.buttomTextField.text = self.meme.buttomText
+//        controller.topTextField.text = self.meme.topText
+//        controller.imageView.image = self.meme.originalImage
+//        
+//    }
+    
     
 }

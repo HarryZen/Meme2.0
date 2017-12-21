@@ -14,10 +14,13 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var buttomTextField: UITextField!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var toolbar: UIToolbar!
-    
+    @IBOutlet weak var cameraButton: UIBarButtonItem!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
+    @IBOutlet weak var topToolBar: UIToolbar!
     @IBOutlet weak var buttomToolBar: UIToolbar!
     
+    
+//    var meme: Meme!
     
     let memeTextAttribute: [String: Any] = [
         NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
@@ -26,35 +29,26 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!
     ]
     
-    let shareButton: UIBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(share(_:)))
-    let flexibleButton: UIBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
-    let cancelButton: UIBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(cancel(_:)))
-    let cameraButton: UIBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.camera, target: self, action: #selector(pickImageFromCamera(_:)))
-    let ablumButton: UIBarButtonItem = UIBarButtonItem.init(title: "Ablum", style: UIBarButtonItemStyle.plain, target: self, action: #selector(pickImageFromAblum(_:)))
+    override func viewDidLoad() {
+        configTextAttribute(topTextField)
+        configTextAttribute(buttomTextField)
+        topTextField.text = "TOP"
+        buttomTextField.text = "BUTTOM"
+        topTextField.delegate = self
+        buttomTextField.delegate = self
+    }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        configTextAttribute(topTextField)
-        configTextAttribute(buttomTextField)
-        topTextField.text = "TOP"
-        buttomTextField.text = "BUTTOM"
-        
-        topTextField.delegate = self
-        buttomTextField.delegate = self
+        if imageView.image == nil {
+            self.shareButton.isEnabled = false
+        }else {
+            self.shareButton.isEnabled = true
+        }
         
         subscribeNotificationToKeyboard()
-        
-//        toolbar.items?.append(shareButton)
-//        toolbar.items?.append(flexibleButton)
-//        toolbar.items?.append(cancelButton)
-//
-//        //tabBar.items?.append(cameraButton)
-//        buttomToolBar.items?.append(cameraButton)
-//        buttomToolBar.items?.append(flexibleButton)
-//        buttomToolBar.items?.append(ablumButton)
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -62,17 +56,6 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         unsubscribeNotificationFromKeyboard()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        toolbar.items?.append(shareButton)
-        toolbar.items?.append(flexibleButton)
-        toolbar.items?.append(cancelButton)
-
-        buttomToolBar.items?.append(cameraButton)
-        buttomToolBar.items?.append(flexibleButton)
-        buttomToolBar.items?.append(ablumButton)
-        
-    }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = ""
@@ -127,7 +110,7 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         
     }
     
-    @objc func share(_ sender: Any) {
+    @IBAction func share(_ sender: Any) {
         let memeImage = generateMeme()
         let shareView = UIActivityViewController(activityItems:[memeImage], applicationActivities: nil)
         
@@ -135,25 +118,24 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
             (activity, completed, items, error) in
             if (completed) {
                 self.save()
+                self.dismiss(animated: true, completion: nil)
             }
         }
         present(shareView, animated: true, completion: nil)
     }
     
-    @objc func cancel(_ sender: Any) {
-        self.imageView.image = nil
-        self.topTextField.text = "TOP"
-        self.buttomTextField.text = "BUTTOM"
+    @IBAction func cancel(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
-    @objc func pickImageFromAblum(_ sender: Any) {
+    @IBAction func pickImageFromAblum(_ sender: Any) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .photoLibrary
         present(imagePickerController, animated: true, completion: nil)
     }
     
-    @objc func pickImageFromCamera(_ sender: Any) {
+    @IBAction func pickImageFromCamera(_ sender: Any) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .camera
@@ -172,10 +154,15 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     func generateMeme() -> UIImage {
+        self.topToolBar.isHidden = true
+        self.buttomToolBar.isHidden = true
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
+        self.topToolBar.isHidden = false
+        self.buttomToolBar.isHidden = false
+        
         return memedImage
     }
 }
