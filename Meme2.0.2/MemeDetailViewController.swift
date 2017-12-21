@@ -16,16 +16,18 @@ class MemeDetailViewController: UIViewController, UINavigationControllerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.imageView.image = meme.memedImage
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .edit
+            , target: self, action:#selector(editMemeFromDetail) )
     }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let controller = segue.destination as! MemeEditorViewController
-//        
-//        controller.buttomTextField.text = self.meme.buttomText
-//        controller.topTextField.text = self.meme.topText
-//        controller.imageView.image = self.meme.originalImage
-//        
-//    }
+    @objc func editMemeFromDetail() {
+        let editorView = storyboard?.instantiateViewController(withIdentifier: "MemeEditorViewController") as! MemeEditorViewController
+        
+        editorView.sentMeme = self.meme
+        
+        present(editorView, animated: true, completion: nil)
+    }
+    
     
     
 }

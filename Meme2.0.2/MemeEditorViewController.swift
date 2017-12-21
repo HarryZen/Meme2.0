@@ -20,7 +20,7 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     @IBOutlet weak var buttomToolBar: UIToolbar!
     
     
-//    var meme: Meme!
+    var sentMeme: Meme!
     
     let memeTextAttribute: [String: Any] = [
         NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
@@ -36,6 +36,8 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         buttomTextField.text = "BUTTOM"
         topTextField.delegate = self
         buttomTextField.delegate = self
+        
+        
     }
     
     
@@ -47,7 +49,9 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         }else {
             self.shareButton.isEnabled = true
         }
-        
+        if sentMeme != nil {
+            setSentMeme(sentMeme)
+        }
         subscribeNotificationToKeyboard()
     }
     
@@ -164,5 +168,11 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         self.buttomToolBar.isHidden = false
         
         return memedImage
+    }
+    
+    func setSentMeme(_ meme: Meme) {
+        self.buttomTextField.text = meme.buttomText
+        self.topTextField.text = meme.topText
+        self.imageView.image = meme.originalImage
     }
 }
