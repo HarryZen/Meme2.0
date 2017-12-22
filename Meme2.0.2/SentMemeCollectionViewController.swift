@@ -15,12 +15,17 @@ class SentMemeCollectionViewController: UIViewController,UICollectionViewDelegat
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         memes = appDelegate.memes
         self.collectionView.reloadData()
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
+//        self.collectionView.delegate = self
+//        self.collectionView.dataSource = self
     }
     
     @IBAction func addMeme(_ sender:Any) {

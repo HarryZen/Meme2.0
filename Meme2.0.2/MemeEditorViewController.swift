@@ -25,7 +25,7 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     let memeTextAttribute: [String: Any] = [
         NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
         NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
-        NSAttributedStringKey.strokeWidth.rawValue: 3.0,
+        NSAttributedStringKey.strokeWidth.rawValue: -3.0,
         NSAttributedStringKey.font.rawValue: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!
     ]
     
@@ -44,11 +44,7 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        if imageView.image == nil {
-            self.shareButton.isEnabled = false
-        }else {
-            self.shareButton.isEnabled = true
-        }
+        shareButton.isEnabled = (imageView.image != nil)
         if sentMeme != nil {
             setSentMeme(sentMeme)
         }
