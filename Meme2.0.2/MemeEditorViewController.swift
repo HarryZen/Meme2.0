@@ -128,18 +128,20 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func pickImageFromAblum(_ sender: Any) {
+    func chooseSourceType(sourceType: UIImagePickerControllerSourceType) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
+        imagePickerController.sourceType = sourceType
+        present(imagePickerController,animated: true, completion: nil)
     }
     
+    @IBAction func pickImageFromAblum(_ sender: Any) {
+        chooseSourceType(sourceType: .photoLibrary)
+    }
+    
+    
     @IBAction func pickImageFromCamera(_ sender: Any) {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .camera
-        present(imagePickerController, animated: true, completion: nil)
+        chooseSourceType(sourceType: .camera)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -153,22 +155,25 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         picker.dismiss(animated: true, completion: nil)
     }
     
+    func hideToolbar(_ isHidden: Bool) {
+        buttomToolBar.isHidden = isHidden
+        topToolBar.isHidden = isHidden
+    }
+    
     func generateMeme() -> UIImage {
-        self.topToolBar.isHidden = true
-        self.buttomToolBar.isHidden = true
+        hideToolbar(true)
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        self.topToolBar.isHidden = false
-        self.buttomToolBar.isHidden = false
+        hideToolbar(false)
         
         return memedImage
     }
     
     func setSentMeme(_ meme: Meme) {
-        self.buttomTextField.text = meme.buttomText
-        self.topTextField.text = meme.topText
-        self.imageView.image = meme.originalImage
+        buttomTextField.text = meme.buttomText
+        topTextField.text = meme.topText
+        imageView.image = meme.originalImage
     }
 }

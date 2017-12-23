@@ -24,8 +24,6 @@ class SentMemeCollectionViewController: UIViewController,UICollectionViewDelegat
         super.viewWillAppear(animated)
         memes = appDelegate.memes
         self.collectionView.reloadData()
-//        self.collectionView.delegate = self
-//        self.collectionView.dataSource = self
     }
     
     @IBAction func addMeme(_ sender:Any) {
